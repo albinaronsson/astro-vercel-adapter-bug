@@ -2,20 +2,47 @@
 import { Picture } from "astro:assets";
 import testImg from "../assets/test.jpg";
 
-const imgString = testImg.src;                 // e.g. "/_astro/test.ABC123.jpg"
-const good = `/_vercel/image?url=${encodeURIComponent(imgString)}&w=800&q=80&cb=good`;
-const bad  = `/_vercel/image?url=${encodeURIComponent(imgString.slice(1))}&w=800&q=80&cb=bad`; // intentionally missing leading "/"
+// Are we in a production build? (Vercel preview/prod)
+const IS_PROD = import.meta.env.PROD;
+
+// Derive a pathname for the asset. In prod builds this will be "/_astro/<hash>.jpg".
+// In dev, Vite uses @fs paths that won't work with Vercel's optimizer.
+const imgPathname = new URL(testImg.src, Astro.url).pathname;
+
+// Build URLs for the Vercel optimizer. Only meaningful on Vercel.
+const good = `/_vercel/image?url=${encodeURIComponent(imgPathname)}&w=800&q=80&cb=good`;
+const bad  = `/_vercel/image?url=${encodeURIComponent(imgPathname.startsWith('/') ? imgPathname.slice(1) : imgPathname)}&w=800&q=80&cb=bad`; // missing leading "/"
 ---
 
 <h1>Vercel Image Optimization Repro</h1>
 
 <h2>Case A — ESM ImageMetadata (adapter path; historically fails)</h2>
-<Picture src={testImg} widths={[800]} formats={["jpeg"]} sizes="100vw" />
+<Picture 
+  src={testImg} 
+  widths={[800]} 
+  formats={["jpeg"]} 
+  sizes="100vw" 
+  alt="Test image for repro" 
+/>
 
-<h2>Case B — Plain IMG (known-bad URL, missing %2F)</h2>
-<p><code>{bad}</code></p>
-<img src={bad} alt="bad-url" width="800" height="480" />
+{IS_PROD ? (
+  <>
+    <h2>Case B — Plain IMG (known-bad URL, missing %2F)</h2>
+    <p><code>{bad}</code></p>
+    <img src={bad} alt="bad-url" width="800" height="480" />
 
-<h2>Case C — Plain IMG (good URL, includes %2F)</h2>
-<p><code>{good}</code></p>
-<img src={good} alt="good-url" width="800" height="480" />
+    <h2>Case C — Plain IMG (good URL, includes %2F)</h2>
+    <p><code>{good}</code></p>
+    <img src={good} alt="good-url" width="800" height="480" />
+  </>
+) : (
+  <>
+    <h2>Optimizer tests (B/C) are hidden in dev</h2>
+    <p>
+      You’re running the dev server. Vercel’s optimizer endpoint <code>/_vercel/image</code> doesn’t exist locally,
+      and dev uses <code>@fs</code> URLs. Build & deploy to Vercel (or run <code>npm run build && npm run preview</code> then deploy)
+      to see Cases B/C behave as intended.
+    </p>
+    <p><strong>Derived pathname (for prod):</strong> <code>{imgPathname}</code></p>
+  </>
+)}
