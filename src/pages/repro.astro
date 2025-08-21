@@ -27,11 +27,11 @@ const bad  = `/_vercel/image?url=${encodeURIComponent(imgPathname.startsWith('/'
 
 {IS_PROD ? (
   <>
-    <h2>Case B — Plain IMG (known-bad URL, missing %2F)</h2>
+    <h2>Case B. Plain IMG (known-bad URL, missing %2F)</h2>
     <p><code>{bad}</code></p>
     <img src={bad} alt="bad-url" width="800" height="480" />
 
-    <h2>Case C — Plain IMG (good URL, includes %2F)</h2>
+    <h2>Case C. Plain IMG (good URL, includes %2F)</h2>
     <p><code>{good}</code></p>
     <img src={good} alt="good-url" width="800" height="480" />
   </>
