@@ -1,22 +1,21 @@
 ---
 import { Picture } from "astro:assets";
 import testImg from "../assets/test.jpg";
-const imgString = testImg.src;
+
+const imgString = testImg.src;                 // e.g. "/_astro/test.ABC123.jpg"
+const good = `/_vercel/image?url=${encodeURIComponent(imgString)}&w=800&q=80&cb=good`;
+const bad  = `/_vercel/image?url=${encodeURIComponent(imgString.slice(1))}&w=800&q=80&cb=bad`; // intentionally missing leading "/"
 ---
 
 <h1>Vercel Image Optimization Repro</h1>
 
-<h2>Case A — ESM ImageMetadata (expected to fail)</h2>
+<h2>Case A — ESM ImageMetadata (adapter path; historically fails)</h2>
 <Picture src={testImg} widths={[800]} formats={["jpeg"]} sizes="100vw" />
 
-<h2>Case B — String path (control, should work)</h2>
-<img
-  src={`/_vercel/image?url=${encodeURIComponent(imgString)}&w=800&q=80`}
-  alt="control"
-  width="800"
-  height="600"
-/>
+<h2>Case B — Plain IMG (known-bad URL, missing %2F)</h2>
+<p><code>{bad}</code></p>
+<img src={bad} alt="bad-url" width="800" height="480" />
 
-<p>Open DevTools → Network. The first request typically fails with
-<code>INVALID_IMAGE_OPTIMIZE_REQUEST</code> due to a missing encoded leading slash inside the <code>url</code> param.
-The second succeeds.</p>
+<h2>Case C — Plain IMG (good URL, includes %2F)</h2>
+<p><code>{good}</code></p>
+<img src={good} alt="good-url" width="800" height="480" />
