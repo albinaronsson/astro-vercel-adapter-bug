@@ -16,7 +16,7 @@ const bad  = `/_vercel/image?url=${encodeURIComponent(imgPathname.startsWith('/'
 
 <h1>Vercel Image Optimization Repro</h1>
 
-<h2>Case A — ESM ImageMetadata (adapter path; historically fails)</h2>
+<h2>Case A. ESM ImageMetadata (adapter path; historically fails)</h2>
 <Picture 
   src={testImg} 
   widths={[800]} 
