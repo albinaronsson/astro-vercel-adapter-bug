@@ -1,0 +1,22 @@
+---
+import { Picture } from "astro:assets";
+import testImg from "../assets/test.jpg";
+const imgString = testImg.src;
+---
+
+<h1>Vercel Image Optimization Repro</h1>
+
+<h2>Case A — ESM ImageMetadata (expected to fail)</h2>
+<Picture src={testImg} widths={[800]} formats={["jpeg"]} sizes="100vw" />
+
+<h2>Case B — String path (control, should work)</h2>
+<img
+  src={`/_vercel/image?url=${encodeURIComponent(imgString)}&w=800&q=80`}
+  alt="control"
+  width="800"
+  height="600"
+/>
+
+<p>Open DevTools → Network. The first request typically fails with
+<code>INVALID_IMAGE_OPTIMIZE_REQUEST</code> due to a missing encoded leading slash inside the <code>url</code> param.
+The second succeeds.</p>
