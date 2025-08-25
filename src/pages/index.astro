@@ -91,12 +91,74 @@
         word-break: break-all;
         font-family: monospace;
       }
-      .summary {
-        background: #f0f8ff;
-        border: 2px solid #0066cc;
-        border-radius: 8px;
-        padding: 20px;
-        margin-bottom: 30px;
+      .link-section {
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid #ddd;
+      }
+      .link-group {
+        margin-bottom: 10px;
+      }
+      .link-label {
+        font-size: 11px;
+        font-weight: bold;
+        color: #666;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .test-link {
+        display: inline-block;
+        padding: 6px 12px;
+        background: #0066cc;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        font-size: 12px;
+        margin-right: 8px;
+        margin-bottom: 5px;
+      }
+      .test-link:hover {
+        background: #0052a3;
+      }
+      .test-link.original {
+        background: #ff6b6b;
+      }
+      .test-link.original:hover {
+        background: #ff5252;
+      }
+      .test-link.fixed {
+        background: #4CAF50;
+      }
+      .test-link.fixed:hover {
+        background: #45a049;
+      }
+      .url-comparison {
+        display: grid;
+        gap: 8px;
+        margin-top: 10px;
+      }
+      .url-item {
+        padding: 8px;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 11px;
+        font-family: monospace;
+        word-break: break-all;
+      }
+      .url-item.broken {
+        background: #fff5f5;
+        border-color: #ff4444;
+      }
+      .url-item.fixed {
+        background: #f0fff0;
+        border-color: #4CAF50;
+      }
+      .url-label {
+        font-weight: bold;
+        color: #666;
+        margin-bottom: 3px;
       }
       pre {
         background: #f5f5f5;
@@ -109,11 +171,6 @@
   </head>
   <body>
     <h1>🐛 Vercel Image Service URL Bug Reproduction</h1>
-
-    <div class="summary" id="summary">
-      <h2 style="margin-top: 0;">Testing Status</h2>
-      <p>Loading images to check which ones fail...</p>
-    </div>
 
     <div class="grid">
       <div class="image-card" data-image="dakota-right">
@@ -133,7 +190,23 @@
           />
           <span class="status-badge" style="display: none;"></span>
         </div>
-        <div class="url-display"></div>
+        <div class="link-section">
+          <div class="link-group">
+            <div class="link-label">Test Links:</div>
+            <a href="#" class="test-link original" target="_blank">Original URL</a>
+            <a href="#" class="test-link fixed" target="_blank">Fixed URL</a>
+          </div>
+          <div class="url-comparison">
+            <div class="url-item broken">
+              <div class="url-label">❌ Generated (Broken):</div>
+              <span class="original-url"></span>
+            </div>
+            <div class="url-item fixed">
+              <div class="url-label">✅ Fixed (Working):</div>
+              <span class="fixed-url"></span>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="image-card" data-image="dakota-wrong">
@@ -153,7 +226,23 @@
           />
           <span class="status-badge" style="display: none;"></span>
         </div>
-        <div class="url-display"></div>
+        <div class="link-section">
+          <div class="link-group">
+            <div class="link-label">Test Links:</div>
+            <a href="#" class="test-link original" target="_blank">Original URL</a>
+            <a href="#" class="test-link fixed" target="_blank">Fixed URL</a>
+          </div>
+          <div class="url-comparison">
+            <div class="url-item broken">
+              <div class="url-label">❌ Generated (Broken):</div>
+              <span class="original-url"></span>
+            </div>
+            <div class="url-item fixed">
+              <div class="url-label">✅ Fixed (Working):</div>
+              <span class="fixed-url"></span>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="image-card" data-image="sofia-right">
@@ -173,7 +262,23 @@
           />
           <span class="status-badge" style="display: none;"></span>
         </div>
-        <div class="url-display"></div>
+        <div class="link-section">
+          <div class="link-group">
+            <div class="link-label">Test Links:</div>
+            <a href="#" class="test-link original" target="_blank">Original URL</a>
+            <a href="#" class="test-link fixed" target="_blank">Fixed URL</a>
+          </div>
+          <div class="url-comparison">
+            <div class="url-item broken">
+              <div class="url-label">❌ Generated (Broken):</div>
+              <span class="original-url"></span>
+            </div>
+            <div class="url-item fixed">
+              <div class="url-label">✅ Fixed (Working):</div>
+              <span class="fixed-url"></span>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="image-card" data-image="sofia-wrong">
@@ -193,18 +298,31 @@
           />
           <span class="status-badge" style="display: none;"></span>
         </div>
-        <div class="url-display"></div>
+        <div class="link-section">
+          <div class="link-group">
+            <div class="link-label">Test Links:</div>
+            <a href="#" class="test-link original" target="_blank">Original URL</a>
+            <a href="#" class="test-link fixed" target="_blank">Fixed URL</a>
+          </div>
+          <div class="url-comparison">
+            <div class="url-item broken">
+              <div class="url-label">❌ Generated (Broken):</div>
+              <span class="original-url"></span>
+            </div>
+            <div class="url-item fixed">
+              <div class="url-label">✅ Fixed (Working):</div>
+              <span class="fixed-url"></span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <h2>Generated Image URLs</h2>
+    <h2>Full URL Analysis</h2>
     <pre id="urls"></pre>
 
-    <h2>Bug Analysis</h2>
-    <div id="analysis"></div>
-
     <script>
-      // Check image loading status and display URLs
+      // Check image loading status and setup comparison links
       document.addEventListener('DOMContentLoaded', () => {
         const cards = document.querySelectorAll('.image-card');
         let loadedCount = 0;
@@ -213,12 +331,30 @@
         cards.forEach(card => {
           const img = card.querySelector('img');
           const statusBadge = card.querySelector('.status-badge');
-          const urlDisplay = card.querySelector('.url-display');
+          const originalUrlSpan = card.querySelector('.original-url');
+          const fixedUrlSpan = card.querySelector('.fixed-url');
           const dimensions = card.querySelector('.dimensions');
+          const originalLink = card.querySelector('.test-link.original');
+          const fixedLink = card.querySelector('.test-link.fixed');
 
-          // Display the URL
           if (img) {
-            urlDisplay.textContent = img.src;
+            // Get the original URL
+            const originalUrl = img.src;
+
+            // Create fixed URL by ensuring the leading slash is present
+            let fixedUrl = originalUrl;
+            if (originalUrl.includes('url=_astro')) {
+              // Replace url=_astro with url=%2F_astro (add the encoded slash)
+              fixedUrl = originalUrl.replace(/url=_astro/, 'url=%2F_astro');
+            }
+
+            // Display URLs
+            originalUrlSpan.textContent = originalUrl;
+            fixedUrlSpan.textContent = fixedUrl;
+
+            // Set link hrefs
+            originalLink.href = originalUrl;
+            fixedLink.href = fixedUrl;
 
             // Update dimensions if available
             if (img.naturalWidth && img.naturalHeight) {
@@ -242,7 +378,6 @@
                   statusBadge.style.display = 'block';
                   loadedCount++;
                 }
-                updateSummary();
               }
             };
 
@@ -257,7 +392,6 @@
 
                 // Update actual dimensions
                 dimensions.textContent = `${img.naturalWidth}x${img.naturalHeight}`;
-                updateSummary();
               });
 
               img.addEventListener('error', () => {
@@ -266,69 +400,27 @@
                 statusBadge.textContent = 'FAILED';
                 statusBadge.className = 'status-badge status-error';
                 statusBadge.style.display = 'block';
-                updateSummary();
               });
             }
           }
         });
 
-        function updateSummary() {
-          const total = cards.length;
-          const summary = document.getElementById('summary');
-
-          if (loadedCount + errorCount === total) {
-            if (errorCount > 0) {
-              summary.innerHTML = `
-                <h2 style="margin-top: 0; color: #ff4444;">⚠️ Bug Confirmed</h2>
-                <p><strong>${errorCount} of ${total} images failed to load</strong></p>
-                <p>The Vercel image service is generating incorrect URLs for certain images.</p>
-                <p>Failed images have URLs missing the leading slash: <code>url=_astro/...</code> instead of <code>url=/_astro/...</code></p>
-              `;
-            } else {
-              summary.innerHTML = `
-                <h2 style="margin-top: 0; color: #4CAF50;">✅ All Images Loaded</h2>
-                <p>All ${total} images loaded successfully. The bug may not be reproducing in this environment.</p>
-              `;
-            }
-          }
-        }
-
-        // Display all image URLs
+        // Display all image URLs with analysis
         const images = document.querySelectorAll('img');
         const urls = Array.from(images).map(img => {
           const actualWidth = img.getAttribute('width') || 'auto';
           const generatedWidth = img.src.match(/w=(\d+)/)?.[1] || 'unknown';
+          const hasLeadingSlash = img.src.includes('url=%2F_astro');
+          const status = hasLeadingSlash ? '✅ CORRECT' : '❌ MISSING SLASH';
+
           return `${img.alt}:
+    Status: ${status}
     URL: ${img.src}
     Generated width: ${generatedWidth}px
-    Original dimensions: ${img.getAttribute('inputtedwidth') || actualWidth} x ${img.getAttribute('height') || 'auto'}`;
+    Original dimensions: ${img.getAttribute('inputtedwidth') || actualWidth} x ${img.getAttribute('height') || 'auto'}
+    Issue: ${!hasLeadingSlash ? 'Missing "/" before "_astro" in URL parameter' : 'None'}`;
         }).join('\n\n');
         document.getElementById('urls').textContent = urls;
-
-        // Analyze the URLs
-        const analysis = document.getElementById('analysis');
-        const brokenUrls = Array.from(images).filter(img =>
-          img.src.includes('url=_astro') && !img.src.includes('url=%2F_astro')
-        );
-
-        if (brokenUrls.length > 0) {
-          analysis.innerHTML = `
-            <div style="background: #fff5f5; border: 2px solid #ff4444; border-radius: 8px; padding: 15px;">
-              <h3 style="margin-top: 0; color: #ff4444;">Found ${brokenUrls.length} URLs with missing leading slash:</h3>
-              <ul style="font-family: monospace; font-size: 12px;">
-                ${brokenUrls.map(img => `<li>${img.alt}: Missing "/" before "_astro"</li>`).join('')}
-              </ul>
-              <p><strong>Expected format:</strong> <code>/_vercel/image?url=<mark>%2F</mark>_astro%2Ffilename.hash.jpg</code></p>
-              <p><strong>Actual format:</strong> <code>/_vercel/image?url=_astro%2Ffilename.hash.jpg</code></p>
-            </div>
-          `;
-        } else {
-          analysis.innerHTML = `
-            <div style="background: #f0fff0; border: 2px solid #4CAF50; border-radius: 8px; padding: 15px;">
-              <p>All URLs appear to be correctly formatted.</p>
-            </div>
-          `;
-        }
       });
     </script>
   </body>
