@@ -1,14 +1,6 @@
 {
-  "name": "astro-vercel-image-repro",
-  "private": true,
-  "type": "module",
-  "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview"
-  },
-  "devDependencies": {
-    "astro": "latest",
-    "@astrojs/vercel": "latest"
+  "dependencies": {
+    "astro": "^5.0.0",
+    "@astrojs/vercel": "^8.0.0"
   }
 }

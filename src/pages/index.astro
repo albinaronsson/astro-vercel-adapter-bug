@@ -1,0 +1,58 @@
+  import { Picture } from "astro:assets";
+  import dakotaRightImg from "../assets/dakota_right_season.jpg";
+  import dakotaWrongImg from "../assets/dakota_wrong_season.jpg";
+  import sofiaRightImg from "../assets/sofia_right_season.jpg";
+  import sofiaWrongImg from "../assets/sofia_wrong_season.jpg";
+
+  const imageProps = {
+    widths: [400, 800],
+    formats: ["avif", "webp", "jpeg"],
+    sizes: "(max-width: 800px) 100vw, 800px",
+  };
+  ---
+
+  <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Vercel Image Service Bug Repro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  </head>
+  <body>
+    <h1>Vercel Image Service URL Bug Reproduction</h1>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 800px; margin: 0 auto;">
+      <div>
+        <h2>Dakota Right (59KB original)</h2>
+        <Picture src={dakotaRightImg} alt="Dakota Right Season" {...imageProps} />
+      </div>
+
+      <div>
+        <h2>Dakota Wrong (348KB original)</h2>
+        <Picture src={dakotaWrongImg} alt="Dakota Wrong Season" {...imageProps} />
+      </div>
+
+      <div>
+        <h2>Sofia Right (453KB original)</h2>
+        <Picture src={sofiaRightImg} alt="Sofia Right Season" {...imageProps} />
+      </div>
+
+      <div>
+        <h2>Sofia Wrong (325KB original)</h2>
+        <Picture src={sofiaWrongImg} alt="Sofia Wrong Season" {...imageProps} />
+      </div>
+    </div>
+
+    <h2 style="margin-top: 40px;">Image URLs in HTML:</h2>
+    <pre id="urls"></pre>
+
+    <script>
+      // Extract and display the generated image URLs
+      const images = document.querySelectorAll('img');
+      const urls = Array.from(images).map(img => {
+        const label = img.alt;
+        return `${label}:\n${img.src}\n`;
+      }).join('\n');
+      document.getElementById('urls').textContent = urls;
+    </script>
+  </body>
+  </html>
