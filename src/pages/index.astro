@@ -1,4 +1,4 @@
-  ---
+● ---
   import { Picture } from "astro:assets";
   import dakotaRightImg from "../assets/dakota_right_season.jpg";
   import dakotaWrongImg from "../assets/dakota_wrong_season.jpg";
@@ -11,67 +11,325 @@
     <meta charset="utf-8" />
     <title>Vercel Image Service Bug Repro</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      body {
+        font-family: system-ui, -apple-system, sans-serif;
+        padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      h1 {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-bottom: 40px;
+      }
+      .image-card {
+        border: 2px solid #ccc;
+        border-radius: 8px;
+        padding: 15px;
+        background: #f9f9f9;
+      }
+      .image-card.error {
+        border-color: #ff4444;
+        background: #fff5f5;
+      }
+      .image-card h3 {
+        margin: 0 0 10px 0;
+        font-size: 16px;
+        color: #333;
+      }
+      .image-info {
+        font-size: 12px;
+        color: #666;
+        margin-bottom: 10px;
+        font-family: monospace;
+      }
+      .image-container {
+        width: 100%;
+        height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        overflow: hidden;
+        position: relative;
+      }
+      .image-container img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+      }
+      .status-badge {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        padding: 3px 8px;
+        border-radius: 3px;
+        font-size: 11px;
+        font-weight: bold;
+        color: white;
+      }
+      .status-loaded {
+        background: #4CAF50;
+      }
+      .status-error {
+        background: #ff4444;
+      }
+      .url-display {
+        margin-top: 10px;
+        padding: 8px;
+        background: #f0f0f0;
+        border-radius: 4px;
+        font-size: 11px;
+        word-break: break-all;
+        font-family: monospace;
+      }
+      .summary {
+        background: #f0f8ff;
+        border: 2px solid #0066cc;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 30px;
+      }
+      pre {
+        background: #f5f5f5;
+        padding: 15px;
+        border-radius: 4px;
+        overflow-x: auto;
+        font-size: 12px;
+      }
+    </style>
   </head>
   <body>
-    <h1>Vercel Image Service URL Bug Reproduction</h1>
+    <h1>🐛 Vercel Image Service URL Bug Reproduction</h1>
 
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 800px; margin: 0 auto;">
-      <div>
-        <h2>Dakota Right (59KB original)</h2>
-        <Picture
-          src={dakotaRightImg}
-          alt="Dakota Right Season"
-          widths={[400, 800]}
-          formats={["avif", "webp", "jpeg"]}
-          sizes="(max-width: 800px) 100vw, 800px"
-        />
+    <div class="summary" id="summary">
+      <h2 style="margin-top: 0;">Testing Status</h2>
+      <p>Loading images to check which ones fail...</p>
+    </div>
+
+    <div class="grid">
+      <div class="image-card" data-image="dakota-right">
+        <h3>Dakota Right</h3>
+        <div class="image-info">
+          Original: 59KB<br>
+          Dimensions: <span class="dimensions">500x750</span><br>
+          Requested width: 400, 800
+        </div>
+        <div class="image-container">
+          <Picture
+            src={dakotaRightImg}
+            alt="Dakota Right Season"
+            widths={[400, 800]}
+            formats={["avif", "webp", "jpeg"]}
+            sizes="(max-width: 800px) 100vw, 800px"
+          />
+          <span class="status-badge" style="display: none;"></span>
+        </div>
+        <div class="url-display"></div>
       </div>
 
-      <div>
-        <h2>Dakota Wrong (348KB original)</h2>
-        <Picture
-          src={dakotaWrongImg}
-          alt="Dakota Wrong Season"
-          widths={[400, 800]}
-          formats={["avif", "webp", "jpeg"]}
-          sizes="(max-width: 800px) 100vw, 800px"
-        />
+      <div class="image-card" data-image="dakota-wrong">
+        <h3>Dakota Wrong</h3>
+        <div class="image-info">
+          Original: 348KB<br>
+          Dimensions: <span class="dimensions">1229x1559</span><br>
+          Requested width: 400, 800
+        </div>
+        <div class="image-container">
+          <Picture
+            src={dakotaWrongImg}
+            alt="Dakota Wrong Season"
+            widths={[400, 800]}
+            formats={["avif", "webp", "jpeg"]}
+            sizes="(max-width: 800px) 100vw, 800px"
+          />
+          <span class="status-badge" style="display: none;"></span>
+        </div>
+        <div class="url-display"></div>
       </div>
 
-      <div>
-        <h2>Sofia Right (453KB original)</h2>
-        <Picture
-          src={sofiaRightImg}
-          alt="Sofia Right Season"
-          widths={[400, 800]}
-          formats={["avif", "webp", "jpeg"]}
-          sizes="(max-width: 800px) 100vw, 800px"
-        />
+      <div class="image-card" data-image="sofia-right">
+        <h3>Sofia Right</h3>
+        <div class="image-info">
+          Original: 453KB<br>
+          Dimensions: <span class="dimensions">3840x2160</span><br>
+          Requested width: 400, 800
+        </div>
+        <div class="image-container">
+          <Picture
+            src={sofiaRightImg}
+            alt="Sofia Right Season"
+            widths={[400, 800]}
+            formats={["avif", "webp", "jpeg"]}
+            sizes="(max-width: 800px) 100vw, 800px"
+          />
+          <span class="status-badge" style="display: none;"></span>
+        </div>
+        <div class="url-display"></div>
       </div>
 
-      <div>
-        <h2>Sofia Wrong (325KB original)</h2>
-        <Picture
-          src={sofiaWrongImg}
-          alt="Sofia Wrong Season"
-          widths={[400, 800]}
-          formats={["avif", "webp", "jpeg"]}
-          sizes="(max-width: 800px) 100vw, 800px"
-        />
+      <div class="image-card" data-image="sofia-wrong">
+        <h3>Sofia Wrong</h3>
+        <div class="image-info">
+          Original: 325KB<br>
+          Dimensions: <span class="dimensions">2898x1920</span><br>
+          Requested width: 400, 800
+        </div>
+        <div class="image-container">
+          <Picture
+            src={sofiaWrongImg}
+            alt="Sofia Wrong Season"
+            widths={[400, 800]}
+            formats={["avif", "webp", "jpeg"]}
+            sizes="(max-width: 800px) 100vw, 800px"
+          />
+          <span class="status-badge" style="display: none;"></span>
+        </div>
+        <div class="url-display"></div>
       </div>
     </div>
 
-    <h2 style="margin-top: 40px;">Image URLs in HTML:</h2>
+    <h2>Generated Image URLs</h2>
     <pre id="urls"></pre>
 
+    <h2>Bug Analysis</h2>
+    <div id="analysis"></div>
+
     <script>
-      // Extract and display the generated image URLs
-      const images = document.querySelectorAll('img');
-      const urls = Array.from(images).map(img => {
-        const label = img.alt;
-        return `${label}:\n${img.src}\n`;
-      }).join('\n');
-      document.getElementById('urls').textContent = urls;
+      // Check image loading status and display URLs
+      document.addEventListener('DOMContentLoaded', () => {
+        const cards = document.querySelectorAll('.image-card');
+        let loadedCount = 0;
+        let errorCount = 0;
+
+        cards.forEach(card => {
+          const img = card.querySelector('img');
+          const statusBadge = card.querySelector('.status-badge');
+          const urlDisplay = card.querySelector('.url-display');
+          const dimensions = card.querySelector('.dimensions');
+
+          // Display the URL
+          if (img) {
+            urlDisplay.textContent = img.src;
+
+            // Update dimensions if available
+            if (img.naturalWidth && img.naturalHeight) {
+              dimensions.textContent = `${img.naturalWidth}x${img.naturalHeight}`;
+            }
+
+            // Check if image loaded
+            const checkImage = () => {
+              if (img.complete) {
+                if (img.naturalWidth === 0) {
+                  // Image failed to load
+                  card.classList.add('error');
+                  statusBadge.textContent = 'FAILED';
+                  statusBadge.className = 'status-badge status-error';
+                  statusBadge.style.display = 'block';
+                  errorCount++;
+                } else {
+                  // Image loaded successfully
+                  statusBadge.textContent = 'LOADED';
+                  statusBadge.className = 'status-badge status-loaded';
+                  statusBadge.style.display = 'block';
+                  loadedCount++;
+                }
+                updateSummary();
+              }
+            };
+
+            if (img.complete) {
+              checkImage();
+            } else {
+              img.addEventListener('load', () => {
+                loadedCount++;
+                statusBadge.textContent = 'LOADED';
+                statusBadge.className = 'status-badge status-loaded';
+                statusBadge.style.display = 'block';
+
+                // Update actual dimensions
+                dimensions.textContent = `${img.naturalWidth}x${img.naturalHeight}`;
+                updateSummary();
+              });
+
+              img.addEventListener('error', () => {
+                errorCount++;
+                card.classList.add('error');
+                statusBadge.textContent = 'FAILED';
+                statusBadge.className = 'status-badge status-error';
+                statusBadge.style.display = 'block';
+                updateSummary();
+              });
+            }
+          }
+        });
+
+        function updateSummary() {
+          const total = cards.length;
+          const summary = document.getElementById('summary');
+
+          if (loadedCount + errorCount === total) {
+            if (errorCount > 0) {
+              summary.innerHTML = `
+                <h2 style="margin-top: 0; color: #ff4444;">⚠️ Bug Confirmed</h2>
+                <p><strong>${errorCount} of ${total} images failed to load</strong></p>
+                <p>The Vercel image service is generating incorrect URLs for certain images.</p>
+                <p>Failed images have URLs missing the leading slash: <code>url=_astro/...</code> instead of <code>url=/_astro/...</code></p>
+              `;
+            } else {
+              summary.innerHTML = `
+                <h2 style="margin-top: 0; color: #4CAF50;">✅ All Images Loaded</h2>
+                <p>All ${total} images loaded successfully. The bug may not be reproducing in this environment.</p>
+              `;
+            }
+          }
+        }
+
+        // Display all image URLs
+        const images = document.querySelectorAll('img');
+        const urls = Array.from(images).map(img => {
+          const actualWidth = img.getAttribute('width') || 'auto';
+          const generatedWidth = img.src.match(/w=(\d+)/)?.[1] || 'unknown';
+          return `${img.alt}:
+    URL: ${img.src}
+    Generated width: ${generatedWidth}px
+    Original dimensions: ${img.getAttribute('inputtedwidth') || actualWidth} x ${img.getAttribute('height') || 'auto'}`;
+        }).join('\n\n');
+        document.getElementById('urls').textContent = urls;
+
+        // Analyze the URLs
+        const analysis = document.getElementById('analysis');
+        const brokenUrls = Array.from(images).filter(img =>
+          img.src.includes('url=_astro') && !img.src.includes('url=%2F_astro')
+        );
+
+        if (brokenUrls.length > 0) {
+          analysis.innerHTML = `
+            <div style="background: #fff5f5; border: 2px solid #ff4444; border-radius: 8px; padding: 15px;">
+              <h3 style="margin-top: 0; color: #ff4444;">Found ${brokenUrls.length} URLs with missing leading slash:</h3>
+              <ul style="font-family: monospace; font-size: 12px;">
+                ${brokenUrls.map(img => `<li>${img.alt}: Missing "/" before "_astro"</li>`).join('')}
+              </ul>
+              <p><strong>Expected format:</strong> <code>/_vercel/image?url=<mark>%2F</mark>_astro%2Ffilename.hash.jpg</code></p>
+              <p><strong>Actual format:</strong> <code>/_vercel/image?url=_astro%2Ffilename.hash.jpg</code></p>
+            </div>
+          `;
+        } else {
+          analysis.innerHTML = `
+            <div style="background: #f0fff0; border: 2px solid #4CAF50; border-radius: 8px; padding: 15px;">
+              <p>All URLs appear to be correctly formatted.</p>
+            </div>
+          `;
+        }
+      });
     </script>
   </body>
   </html>
