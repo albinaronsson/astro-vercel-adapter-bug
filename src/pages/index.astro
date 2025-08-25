@@ -1,524 +1,378 @@
-  ---
-  import { Picture } from "astro:assets";
-  import dakotaRightImg from "../assets/dakota_right_season.jpg";
-  import dakotaWrongImg from "../assets/dakota_wrong_season.jpg";
-  import sofiaRightImg from "../assets/sofia_right_season.jpg";
-  import sofiaWrongImg from "../assets/sofia_wrong_season.jpg";
-  ---
+---
+import { Picture } from "astro:assets";
+import dakotaRightImg from "../assets/dakota_right_season.jpg";
+import dakotaWrongImg from "../assets/dakota_wrong_season.jpg";
+import sofiaRightImg from "../assets/sofia_right_season.jpg";
+import sofiaWrongImg from "../assets/sofia_wrong_season.jpg";
+---
 
-  <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>Vercel Image Service Bug Repro</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <style>
-      body {
-        font-family: system-ui, -apple-system, sans-serif;
-        padding: 20px;
-        max-width: 1200px;
-        margin: 0 auto;
-      }
-      h1 {
-        text-align: center;
-        margin-bottom: 30px;
-      }
-      .grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 20px;
-        margin-bottom: 40px;
-      }
-      .image-card {
-        border: 2px solid #ccc;
-        border-radius: 8px;
-        padding: 15px;
-        background: #f9f9f9;
-      }
-      .image-card.error {
-        border-color: #ff4444;
-        background: #fff5f5;
-      }
-      .image-card h3 {
-        margin: 0 0 10px 0;
-        font-size: 16px;
-        color: #333;
-      }
-      .image-info {
-        font-size: 12px;
-        color: #666;
-        margin-bottom: 10px;
-        font-family: monospace;
-      }
-      .image-container {
-        width: 100%;
-        height: 200px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: white;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        overflow: hidden;
-        position: relative;
-        margin-bottom: 10px;
-      }
-      .image-container img {
-        max-width: 100%;
-        max-height: 100%;
-        object-fit: contain;
-      }
-      .test-image-container {
-        width: 100%;
-        height: 100px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: white;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        overflow: hidden;
-        position: relative;
-        margin-top: 5px;
-      }
-      .test-image-container img {
-        max-width: 100%;
-        max-height: 100%;
-        object-fit: contain;
-      }
-      .status-badge {
-        position: absolute;
-        top: 5px;
-        right: 5px;
-        padding: 3px 8px;
-        border-radius: 3px;
-        font-size: 11px;
-        font-weight: bold;
-        color: white;
-      }
-      .status-loaded {
-        background: #4CAF50;
-      }
-      .status-error {
-        background: #ff4444;
-      }
-      .link-section {
-        margin-top: 15px;
-        padding-top: 15px;
-        border-top: 1px solid #ddd;
-      }
-      .link-label {
-        font-size: 11px;
-        font-weight: bold;
-        color: #666;
-        margin-bottom: 5px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-      }
-      .test-link {
-        display: inline-block;
-        padding: 6px 12px;
-        background: #0066cc;
-        color: white;
-        text-decoration: none;
-        border-radius: 4px;
-        font-size: 12px;
-        margin-right: 8px;
-        margin-bottom: 5px;
-      }
-      .test-link:hover {
-        background: #0052a3;
-      }
-      .test-link.original {
-        background: #ff6b6b;
-      }
-      .test-link.original:hover {
-        background: #ff5252;
-      }
-      .test-link.fixed {
-        background: #4CAF50;
-      }
-      .test-link.fixed:hover {
-        background: #45a049;
-      }
-      .url-comparison {
-        display: grid;
-        gap: 8px;
-        margin-top: 10px;
-      }
-      .url-item {
-        padding: 8px;
-        background: white;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        font-size: 11px;
-        font-family: monospace;
-        word-break: break-all;
-      }
-      .url-label {
-        font-weight: bold;
-        color: #666;
-        margin-bottom: 3px;
-      }
-      .test-section {
-        background: #f0f8ff;
-        border: 1px solid #0066cc;
-        border-radius: 4px;
-        padding: 10px;
-        margin-top: 10px;
-      }
-      .test-section h4 {
-        margin: 0 0 8px 0;
-        font-size: 13px;
-        color: #0066cc;
-      }
-      pre {
-        background: #f5f5f5;
-        padding: 15px;
-        border-radius: 4px;
-        overflow-x: auto;
-        font-size: 12px;
-      }
-      .debug-info {
-        margin-top: 30px;
-        padding: 20px;
-        background: #fffbf0;
-        border: 2px solid #ff9800;
-        border-radius: 8px;
-      }
-    </style>
-  </head>
-  <body>
-    <h1>🐛 Vercel Image Service URL Bug Reproduction</h1>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Vercel image Service bug repro</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      padding: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+    .image-card {
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      padding: 15px;
+      background: #f9f9f9;
+    }
+    .image-card.error {
+      border-color: #ff4444;
+      background: #fff5f5;
+    }
+    .image-card h3 {
+      margin: 0 0 10px 0;
+      font-size: 16px;
+      color: #333;
+    }
+    .image-info {
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 10px;
+      font-family: monospace;
+    }
+    .image-container {
+      width: 100%;
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
+    }
+    .image-container img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+    .status-badge {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      padding: 3px 8px;
+      border-radius: 3px;
+      font-size: 11px;
+      font-weight: bold;
+      color: white;
+    }
+    .status-loaded {
+      background: #4CAF50;
+    }
+    .status-error {
+      background: #ff4444;
+    }
+    .link-section {
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px solid #ddd;
+    }
+    .link-group {
+      margin-bottom: 10px;
+    }
+    .link-label {
+      font-size: 11px;
+      font-weight: bold;
+      color: #666;
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .test-link {
+      display: inline-block;
+      padding: 6px 12px;
+      background: #0066cc;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      font-size: 12px;
+      margin-right: 8px;
+      margin-bottom: 5px;
+    }
+    .test-link:hover {
+      background: #0052a3;
+    }
+    .test-link.original {
+      background: #ff6b6b;
+    }
+    .test-link.original:hover {
+      background: #ff5252;
+    }
+    .test-link.fixed {
+      background: #4CAF50;
+    }
+    .test-link.fixed:hover {
+      background: #45a049;
+    }
+    .url-comparison {
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .url-item {
+      padding: 8px;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 11px;
+      font-family: monospace;
+      word-break: break-all;
+    }
+    .url-item.broken {
+      background: #fff5f5;
+      border-color: #ff4444;
+    }
+    .url-item.fixed {
+      background: #f0fff0;
+      border-color: #4CAF50;
+    }
+    .url-label {
+      font-weight: bold;
+      color: #666;
+      margin-bottom: 3px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Vercel image service URL bug reproduction</h1>
 
-    <div class="debug-info">
-      <h2 style="margin-top: 0; color: #ff9800;">⚠️ Debug Information</h2>
-      <p><strong>Weird Behavior Observed:</strong></p>
-      <ul>
-        <li>Images don't show on the page (in &lt;img&gt; tags)</li>
-        <li>BUT both "broken" and "fixed" URLs work when opened directly in a new tab</li>
-        <li>This suggests the issue might be context-dependent (headers, referrer, etc.)</li>
-      </ul>
-      <p><strong>Test Below:</strong> Each card shows the original image, plus manual test images with both URLs</p>
-    </div>
-
-    <div class="grid">
-      <div class="image-card" data-image="dakota-right">
-        <h3>Dakota Right</h3>
-        <div class="image-info">
-          Original: 59KB (500x750)<br>
-          Requested width: 400, 800
-        </div>
-
-        <div style="background: #fff; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
-          <div class="link-label">Original Astro-Generated Image:</div>
-          <div class="image-container">
-            <Picture
-              src={dakotaRightImg}
-              alt="Dakota Right Season"
-              widths={[400, 800]}
-              formats={["avif", "webp", "jpeg"]}
-              sizes="(max-width: 800px) 100vw, 800px"
-            />
-            <span class="status-badge" style="display: none;"></span>
-          </div>
-        </div>
-
-        <div class="test-section">
-          <h4>Manual Test with Generated URL:</h4>
-          <div class="test-image-container">
-            <img class="manual-original" alt="Manual Original URL" />
-            <span class="status-badge" style="display: none;"></span>
-          </div>
-
-          <h4>Manual Test with Fixed URL:</h4>
-          <div class="test-image-container">
-            <img class="manual-fixed" alt="Manual Fixed URL" />
-            <span class="status-badge" style="display: none;"></span>
-          </div>
-        </div>
-
-        <div class="link-section">
-          <div class="link-label">Open in New Tab:</div>
-          <a href="#" class="test-link original" target="_blank">Original URL</a>
-          <a href="#" class="test-link fixed" target="_blank">Fixed URL</a>
-
-          <div class="url-comparison">
-            <div class="url-item">
-              <div class="url-label">Generated URL:</div>
-              <span class="original-url"></span>
-            </div>
-            <div class="url-item">
-              <div class="url-label">Fixed URL (with %2F):</div>
-              <span class="fixed-url"></span>
-            </div>
-          </div>
-        </div>
+  <div class="grid">
+    <div class="image-card" data-image="dakota-right">
+      <h3>Dakota Right</h3>
+      <div class="image-info">
+        Original: 59KB<br>
+        Dimensions: <span class="dimensions">500x750</span><br>
+        Requested width: 400, 800
       </div>
-
-      <div class="image-card" data-image="dakota-wrong">
-        <h3>Dakota Wrong</h3>
-        <div class="image-info">
-          Original: 348KB (1229x1559)<br>
-          Requested width: 400, 800
-        </div>
-
-        <div style="background: #fff; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
-          <div class="link-label">Original Astro-Generated Image:</div>
-          <div class="image-container">
-            <Picture
-              src={dakotaWrongImg}
-              alt="Dakota Wrong Season"
-              widths={[400, 800]}
-              formats={["avif", "webp", "jpeg"]}
-              sizes="(max-width: 800px) 100vw, 800px"
-            />
-            <span class="status-badge" style="display: none;"></span>
-          </div>
-        </div>
-
-        <div class="test-section">
-          <h4>Manual Test with Generated URL:</h4>
-          <div class="test-image-container">
-            <img class="manual-original" alt="Manual Original URL" />
-            <span class="status-badge" style="display: none;"></span>
-          </div>
-
-          <h4>Manual Test with Fixed URL:</h4>
-          <div class="test-image-container">
-            <img class="manual-fixed" alt="Manual Fixed URL" />
-            <span class="status-badge" style="display: none;"></span>
-          </div>
-        </div>
-
-        <div class="link-section">
-          <div class="link-label">Open in New Tab:</div>
-          <a href="#" class="test-link original" target="_blank">Original URL</a>
-          <a href="#" class="test-link fixed" target="_blank">Fixed URL</a>
-
-          <div class="url-comparison">
-            <div class="url-item">
-              <div class="url-label">Generated URL:</div>
-              <span class="original-url"></span>
-            </div>
-            <div class="url-item">
-              <div class="url-label">Fixed URL (with %2F):</div>
-              <span class="fixed-url"></span>
-            </div>
-          </div>
-        </div>
+      <div class="image-container">
+        <Picture
+          src={dakotaRightImg}
+          alt="Dakota Right Season"
+          widths={[400, 800]}
+          formats={["avif", "webp", "jpeg"]}
+          sizes="(max-width: 800px) 100vw, 800px"
+        />
+        <span class="status-badge" style="display: none;"></span>
       </div>
-
-      <div class="image-card" data-image="sofia-right">
-        <h3>Sofia Right</h3>
-        <div class="image-info">
-          Original: 453KB (3840x2160)<br>
-          Requested width: 400, 800
-        </div>
-
-        <div style="background: #fff; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
-          <div class="link-label">Original Astro-Generated Image:</div>
-          <div class="image-container">
-            <Picture
-              src={sofiaRightImg}
-              alt="Sofia Right Season"
-              widths={[400, 800]}
-              formats={["avif", "webp", "jpeg"]}
-              sizes="(max-width: 800px) 100vw, 800px"
-            />
-            <span class="status-badge" style="display: none;"></span>
-          </div>
-        </div>
-
-        <div class="test-section">
-          <h4>Manual Test with Generated URL:</h4>
-          <div class="test-image-container">
-            <img class="manual-original" alt="Manual Original URL" />
-            <span class="status-badge" style="display: none;"></span>
-          </div>
-
-          <h4>Manual Test with Fixed URL:</h4>
-          <div class="test-image-container">
-            <img class="manual-fixed" alt="Manual Fixed URL" />
-            <span class="status-badge" style="display: none;"></span>
-          </div>
-        </div>
-
-        <div class="link-section">
-          <div class="link-label">Open in New Tab:</div>
+      <div class="link-section">
+        <div class="link-group">
+          <div class="link-label">Test Links:</div>
           <a href="#" class="test-link original" target="_blank">Original URL</a>
           <a href="#" class="test-link fixed" target="_blank">Fixed URL</a>
-
-          <div class="url-comparison">
-            <div class="url-item">
-              <div class="url-label">Generated URL:</div>
-              <span class="original-url"></span>
-            </div>
-            <div class="url-item">
-              <div class="url-label">Fixed URL (with %2F):</div>
-              <span class="fixed-url"></span>
-            </div>
-          </div>
         </div>
-      </div>
-
-      <div class="image-card" data-image="sofia-wrong">
-        <h3>Sofia Wrong</h3>
-        <div class="image-info">
-          Original: 325KB (2898x1920)<br>
-          Requested width: 400, 800
-        </div>
-
-        <div style="background: #fff; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
-          <div class="link-label">Original Astro-Generated Image:</div>
-          <div class="image-container">
-            <Picture
-              src={sofiaWrongImg}
-              alt="Sofia Wrong Season"
-              widths={[400, 800]}
-              formats={["avif", "webp", "jpeg"]}
-              sizes="(max-width: 800px) 100vw, 800px"
-            />
-            <span class="status-badge" style="display: none;"></span>
+        <div class="url-comparison">
+          <div class="url-item broken">
+            <div class="url-label">❌ Generated (Broken):</div>
+            <span class="original-url"></span>
           </div>
-        </div>
-
-        <div class="test-section">
-          <h4>Manual Test with Generated URL:</h4>
-          <div class="test-image-container">
-            <img class="manual-original" alt="Manual Original URL" />
-            <span class="status-badge" style="display: none;"></span>
-          </div>
-
-          <h4>Manual Test with Fixed URL:</h4>
-          <div class="test-image-container">
-            <img class="manual-fixed" alt="Manual Fixed URL" />
-            <span class="status-badge" style="display: none;"></span>
-          </div>
-        </div>
-
-        <div class="link-section">
-          <div class="link-label">Open in New Tab:</div>
-          <a href="#" class="test-link original" target="_blank">Original URL</a>
-          <a href="#" class="test-link fixed" target="_blank">Fixed URL</a>
-
-          <div class="url-comparison">
-            <div class="url-item">
-              <div class="url-label">Generated URL:</div>
-              <span class="original-url"></span>
-            </div>
-            <div class="url-item">
-              <div class="url-label">Fixed URL (with %2F):</div>
-              <span class="fixed-url"></span>
-            </div>
+          <div class="url-item fixed">
+            <div class="url-label">✅ Fixed (Working):</div>
+            <span class="fixed-url"></span>
           </div>
         </div>
       </div>
     </div>
 
-    <h2>Network Request Analysis</h2>
-    <pre id="analysis"></pre>
+    <div class="image-card" data-image="dakota-wrong">
+      <h3>Dakota Wrong</h3>
+      <div class="image-info">
+        Original: 348KB<br>
+        Dimensions: <span class="dimensions">1229x1559</span><br>
+        Requested width: 400, 800
+      </div>
+      <div class="image-container">
+        <Picture
+          src={dakotaWrongImg}
+          alt="Dakota Wrong Season"
+          widths={[400, 800]}
+          formats={["avif", "webp", "jpeg"]}
+          sizes="(max-width: 800px) 100vw, 800px"
+        />
+        <span class="status-badge" style="display: none;"></span>
+      </div>
+      <div class="link-section">
+        <div class="link-group">
+          <div class="link-label">Test Links:</div>
+          <a href="#" class="test-link original" target="_blank">Original URL</a>
+          <a href="#" class="test-link fixed" target="_blank">Fixed URL</a>
+        </div>
+        <div class="url-comparison">
+          <div class="url-item broken">
+            <div class="url-label">❌ Generated (Broken):</div>
+            <span class="original-url"></span>
+          </div>
+          <div class="url-item fixed">
+            <div class="url-label">✅ Fixed (Working):</div>
+            <span class="fixed-url"></span>
+          </div>
+        </div>
+      </div>
+    </div>
 
-    <script>
-      // Helper to check image status
-      function checkImageStatus(img, badge) {
-        if (img.complete) {
-          if (img.naturalWidth === 0) {
-            badge.textContent = 'FAILED';
-            badge.className = 'status-badge status-error';
-          } else {
-            badge.textContent = 'LOADED';
-            badge.className = 'status-badge status-loaded';
+    <div class="image-card" data-image="sofia-right">
+      <h3>Sofia Right</h3>
+      <div class="image-info">
+        Original: 453KB<br>
+        Dimensions: <span class="dimensions">3840x2160</span><br>
+        Requested width: 400, 800
+      </div>
+      <div class="image-container">
+        <Picture
+          src={sofiaRightImg}
+          alt="Sofia Right Season"
+          widths={[400, 800]}
+          formats={["avif", "webp", "jpeg"]}
+          sizes="(max-width: 800px) 100vw, 800px"
+        />
+        <span class="status-badge" style="display: none;"></span>
+      </div>
+      <div class="link-section">
+        <div class="link-group">
+          <div class="link-label">Test Links:</div>
+          <a href="#" class="test-link original" target="_blank">Original URL</a>
+          <a href="#" class="test-link fixed" target="_blank">Fixed URL</a>
+        </div>
+        <div class="url-comparison">
+          <div class="url-item broken">
+            <div class="url-label">❌ Generated (Broken):</div>
+            <span class="original-url"></span>
+          </div>
+          <div class="url-item fixed">
+            <div class="url-label">✅ Fixed (Working):</div>
+            <span class="fixed-url"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="image-card" data-image="sofia-wrong">
+      <h3>Sofia Wrong</h3>
+      <div class="image-info">
+        Original: 325KB<br>
+        Dimensions: <span class="dimensions">2898x1920</span><br>
+        Requested width: 400, 800
+      </div>
+      <div class="image-container">
+        <Picture
+          src={sofiaWrongImg}
+          alt="Sofia Wrong Season"
+          widths={[400, 800]}
+          formats={["avif", "webp", "jpeg"]}
+          sizes="(max-width: 800px) 100vw, 800px"
+        />
+        <span class="status-badge" style="display: none;"></span>
+      </div>
+      <div class="link-section">
+        <div class="link-group">
+          <div class="link-label">Test Links:</div>
+          <a href="#" class="test-link original" target="_blank">Original URL</a>
+          <a href="#" class="test-link fixed" target="_blank">Fixed URL</a>
+        </div>
+        <div class="url-comparison">
+          <div class="url-item broken">
+            <div class="url-label">❌ Generated (Broken):</div>
+            <span class="original-url"></span>
+          </div>
+          <div class="url-item fixed">
+            <div class="url-label">✅ Fixed (Working):</div>
+            <span class="fixed-url"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const cards = document.querySelectorAll('.image-card');
+      let loadedCount = 0;
+      let errorCount = 0;
+
+      cards.forEach(card => {
+        const img = card.querySelector('img');
+        const statusBadge = card.querySelector('.status-badge');
+        const originalUrlSpan = card.querySelector('.original-url');
+        const fixedUrlSpan = card.querySelector('.fixed-url');
+        const dimensions = card.querySelector('.dimensions');
+        const originalLink = card.querySelector('.test-link.original');
+        const fixedLink = card.querySelector('.test-link.fixed');
+
+        if (img) {
+          const originalUrl = img.src;
+          let fixedUrl = originalUrl;
+          if (originalUrl.includes('url=_astro')) {
+            fixedUrl = originalUrl.replace(/url=_astro/, 'url=%2F_astro');
           }
-          badge.style.display = 'block';
-        }
 
-        img.addEventListener('load', () => {
-          badge.textContent = 'LOADED';
-          badge.className = 'status-badge status-loaded';
-          badge.style.display = 'block';
-        });
+          originalUrlSpan.textContent = originalUrl;
+          fixedUrlSpan.textContent = fixedUrl;
 
-        img.addEventListener('error', () => {
-          badge.textContent = 'FAILED';
-          badge.className = 'status-badge status-error';
-          badge.style.display = 'block';
-        });
-      }
+          originalLink.href = originalUrl;
+          fixedLink.href = fixedUrl;
 
-      document.addEventListener('DOMContentLoaded', () => {
-        const cards = document.querySelectorAll('.image-card');
-        const analysisData = [];
+          if (img.naturalWidth && img.naturalHeight) {
+            dimensions.textContent = `${img.naturalWidth}x${img.naturalHeight}`;
+          }
 
-        cards.forEach(card => {
-          const originalImg = card.querySelector('.image-container img');
-          const originalBadge = card.querySelector('.image-container .status-badge');
-          const manualOriginal = card.querySelector('.manual-original');
-          const manualFixed = card.querySelector('.manual-fixed');
-          const manualOriginalBadge = manualOriginal.parentElement.querySelector('.status-badge');
-          const manualFixedBadge = manualFixed.parentElement.querySelector('.status-badge');
-
-          const originalUrlSpan = card.querySelector('.original-url');
-          const fixedUrlSpan = card.querySelector('.fixed-url');
-          const originalLink = card.querySelector('.test-link.original');
-          const fixedLink = card.querySelector('.test-link.fixed');
-
-          if (originalImg) {
-            // Get the original URL
-            const originalUrl = originalImg.src;
-
-            // Create fixed URL
-            let fixedUrl = originalUrl;
-            if (originalUrl.includes('url=_astro')) {
-              fixedUrl = originalUrl.replace(/url=_astro/, 'url=%2F_astro');
+          const checkImage = () => {
+            if (img.complete) {
+              if (img.naturalWidth === 0) {
+                card.classList.add('error');
+                statusBadge.textContent = 'FAILED';
+                statusBadge.className = 'status-badge status-error';
+                statusBadge.style.display = 'block';
+                errorCount++;
+              } else {
+                statusBadge.textContent = 'LOADED';
+                statusBadge.className = 'status-badge status-loaded';
+                statusBadge.style.display = 'block';
+                loadedCount++;
+              }
             }
+          };
 
-            // Display URLs
-            originalUrlSpan.textContent = originalUrl;
-            fixedUrlSpan.textContent = fixedUrl;
+          if (img.complete) {
+            checkImage();
+          } else {
+            img.addEventListener('load', () => {
+              loadedCount++;
+              statusBadge.textContent = 'LOADED';
+              statusBadge.className = 'status-badge status-loaded';
+              statusBadge.style.display = 'block';
+              dimensions.textContent = `${img.naturalWidth}x${img.naturalHeight}`;
+            });
 
-            // Set link hrefs
-            originalLink.href = originalUrl;
-            fixedLink.href = fixedUrl;
-
-            // Set manual test images
-            manualOriginal.src = originalUrl;
-            manualFixed.src = fixedUrl;
-
-            // Check all images
-            checkImageStatus(originalImg, originalBadge);
-            checkImageStatus(manualOriginal, manualOriginalBadge);
-            checkImageStatus(manualFixed, manualFixedBadge);
-
-            // Collect analysis data
-            const imageName = card.dataset.image;
-            analysisData.push({
-              name: imageName,
-              url: originalUrl,
-              fixedUrl: fixedUrl,
-              hasSlash: originalUrl.includes('url=%2F_astro')
+            img.addEventListener('error', () => {
+              errorCount++;
+              card.classList.add('error');
+              statusBadge.textContent = 'FAILED';
+              statusBadge.className = 'status-badge status-error';
+              statusBadge.style.display = 'block';
             });
           }
-        });
-
-        // Display analysis
-        const analysis = document.getElementById('analysis');
-        let analysisText = 'Image URL Analysis:\n\n';
-
-        analysisData.forEach(data => {
-          analysisText += `${data.name}:\n`;
-          analysisText += `  Original URL: ${data.url}\n`;
-          analysisText += `  Has leading slash: ${data.hasSlash ? 'YES' : 'NO (BUG!)'}\n`;
-          analysisText += `  Fixed URL would be: ${data.fixedUrl}\n\n`;
-        });
-
-        analysisText += '\nNOTE: If both original and fixed URLs work when opened directly,\n';
-        analysisText += 'but fail when embedded as <img> tags, this suggests:\n';
-        analysisText += '1. The Vercel service may handle direct requests differently\n';
-        analysisText += '2. There might be referrer/CORS restrictions\n';
-        analysisText += '3. Browser caching might be affecting results\n';
-
-        analysis.textContent = analysisText;
+        }
       });
-    </script>
-  </body>
-  </html>
+    });
+  </script>
+</body>
+</html>
